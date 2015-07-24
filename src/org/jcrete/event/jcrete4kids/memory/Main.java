@@ -1,4 +1,4 @@
-package org.jcrete.event.jcrete4kids.v001;
+package org.jcrete.event.jcrete4kids.memory;
 
 public class Main {
 
@@ -8,10 +8,8 @@ public class Main {
     public static void main(String args[]) throws Exception {
         MemoryGame game = new MemoryGame();
 
-        GameKit kit = new GameKit().init(HOST, PORT);
-        kit.setup(game);
+        GameKit kit = new GameKit(game, HOST, PORT).setup();
         kit.start();
         kit.stop();
     }
-
 }
