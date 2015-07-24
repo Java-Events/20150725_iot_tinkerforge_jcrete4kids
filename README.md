@@ -26,6 +26,7 @@ based on the callback example you could find [online here](http://www.tinkerforg
 * start the BrickViewer and press the button "connect"
 * check if you could see the AmbientLight
 * find out the UID from the AmbientLight
+* open the BrickViewer and press the button "disconnect"
 * Implement a main method.
 * create an IPConnection
 * write the values to the command line
@@ -40,6 +41,7 @@ based on the example you could find [online here](http://www.tinkerforge.com/en/
 * start the BrickViewer and press the button "connect"
 * check if you could see the LCD
 * find out the UID from the LCD
+* open the BrickViewer and press the button "disconnect"
 * Implement a main method.
 * create an IPConnection
 * write "HelloWorld" to the LCD
@@ -55,8 +57,44 @@ Main003: print the values from the AmbientLight to the LCD
 * find out the UID from the LCD
 * check if you could see the AmbientLight
 * find out the UID from the AmbientLight
+* open the BrickViewer and press the button "disconnect"
 * Implement a main method.
 * create an IPConnection
 * write the Light-Value to the LCD
 
+
+##Lesson 004
+Main004: first steps with a TouchPad
+
+* connect the MasterBrick and the TouchPad
+* connect the MasterBrick and your PC/Laptop
+* start the BrickViewer and press the button "connect"
+* check if you could see the TouchPad
+* find out the UID from the TouchPad
+* open the BrickViewer and press the button "disconnect"
+* Implement the main method
+* write the UID
+* start the programm
+* find out the right number of each square.
+
+* press at the same time the square 3 and 8
+* press at the same time the square 4 and 7 and 10
+* press at the same time the square 2 and 5 and 8 and 11
+
+##Lesson 005
+Main005: increase and decrease the callbackrate
+
+* connect the MasterBrick and the LCD
+* connect the MasterBrick and the AmbientLight
+* connect the MasterBrick and the TouchPad
+* connect the MasterBrick and your PC/Laptop
+* start the BrickViewer and press the button "connect"
+* check if you could see the LCD
+* find out the UID from the LCD
+* check if you could see the AmbientLight
+* find out the UID from the AmbientLight
+* check if you could see the TouchPad
+* find out the UID from the TouchPad
+* open the BrickViewer and press the button "disconnect"
+* Implement a main method.
 
