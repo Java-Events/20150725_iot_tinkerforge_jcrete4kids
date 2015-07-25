@@ -12,8 +12,8 @@ For this event we downloaded an IDE [IntelliJ from JETBRAINS](https://www.jetbra
 ## used elements
 * MasterBrick :
 * AmbientLight: [online Ambient_Light.html](http://www.tinkerforge.com/en/doc/Hardware/Bricklets/Ambient_Light.html)
-* Touchpad:
-* LCD:
+* Touchpad: [online Multi Touch](http://www.tinkerforge.com/en/doc/Hardware/Bricklets/Multi_Touch.html)
+* LCD: [online LCD](http://www.tinkerforge.com/en/doc/Hardware/Bricklets/LCD_20x4.html)
 
 
 ## Lesson 001
