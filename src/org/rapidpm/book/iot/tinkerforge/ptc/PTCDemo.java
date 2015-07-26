@@ -94,7 +94,7 @@ public class PTCDemo extends Application {
   private static void writeToChart(double celcius) {
     Platform.runLater(() -> {
       final XYChart.Data data = new XYChart.Data(new Date(), celcius);
-      series.getData().add(data);
+       series.getData().add(data);
     });
   }
 
