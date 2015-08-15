@@ -4,6 +4,9 @@ import com.tinkerforge.BrickletLCD20x4;
 import com.tinkerforge.IPConnection;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * A demo program to show a pixel-wise text scroller on the LCD 20x4 bricklet.
+ */
 public class PixelScroller {
 
     private static final String UID = "od6"; // Change to your UID
@@ -11,6 +14,12 @@ public class PixelScroller {
     private static final String HOST = "localhost";
     private static final int PORT = 4223;
     private static final String OUTPUT_TEXT = "JCrete4Kids 2015";
+
+    private static final char CUSTOM_CHAR_ZERO = '\u0008';
+    private static final short CUSTOM_CHAR_ZERO_ID = 0;
+
+    private static final char CUSTOM_CHAR_ONE = '\u0009';
+    private static final short CUSTOM_CHAR_ONE_ID = 1;
 
     public static void main(String args[]) throws Exception {
         IPConnection ipcon = new IPConnection();
@@ -20,35 +29,38 @@ public class PixelScroller {
         lcd.clearDisplay();
         lcd.backlightOn();
 
-        int line = 1;
+        short outputLineNUmber = 1;
+
+        short[] charLeftPixels = new short[8];
+        short[] charRightPixels = new short[8];
+        lcd.setCustomCharacter(CUSTOM_CHAR_ZERO_ID, charLeftPixels);
+        lcd.setCustomCharacter(CUSTOM_CHAR_ONE_ID, charRightPixels);
+
+        String customCharacters = "" + CUSTOM_CHAR_ZERO + CUSTOM_CHAR_ONE;
 
         for (int charIndex = 0; charIndex < OUTPUT_TEXT.length(); charIndex++) {
-            int position;
-            for (position = 19; position > 1 + charIndex; position--) {
-                char actualCharacter = OUTPUT_TEXT.charAt(charIndex);
+            for (int position = 18; position >= 2 + charIndex; position--) {
+                char actualCharacter = getActualCharacter(charIndex);
                 if (actualCharacter == ' ') {
                     continue;
                 }
-                short[] charLeft = new short[8];
-                short[] charRight = new short[8];
-                int[] character = getPixelCharacter(actualCharacter);
-                lcd.writeLine((short) line, (short) position, "\u0008\u0009 ");
-                for (int j = 0; j < 6; j++) {
+                int[] twoCharacterPixels = getTwoCharacterPixels(actualCharacter);
 
-                    for (int i = 0; i < 7; i++) {
-                        charLeft[i] = (short) ((character[i] & 0x3E0) >> 5);
-                        charRight[i] = (short) (character[i] & 0x001F);
-                    }
-                    lcd.setCustomCharacter((short) 0, charLeft);
-                    lcd.setCustomCharacter((short) 1, charRight);
+                splitTwoCharacter(twoCharacterPixels, charLeftPixels, charRightPixels);
 
-                    for (int i = 0; i < 7; i++) {
-                        character[i] = character[i] << 1;
-                    }
+                lcd.setCustomCharacter(CUSTOM_CHAR_ZERO_ID, charLeftPixels);
+                lcd.setCustomCharacter(CUSTOM_CHAR_ONE_ID, charRightPixels);
 
+                lcd.writeLine(outputLineNUmber, (short) position, customCharacters);
+
+                for (int j = 0; j < 5; j++) {
+                    moveTwoCharacterPixels(twoCharacterPixels);
                     TimeUnit.MILLISECONDS.sleep(50);
+                    splitTwoCharacter(twoCharacterPixels, charLeftPixels, charRightPixels);
+                    lcd.setCustomCharacter(CUSTOM_CHAR_ZERO_ID, charLeftPixels);
+                    lcd.setCustomCharacter(CUSTOM_CHAR_ONE_ID, charRightPixels);
                 }
-                lcd.writeLine((short) line, (short) position, actualCharacter + "  ");
+                lcd.writeLine(outputLineNUmber, (short) (position), actualCharacter + " ");
             }
         }
 
@@ -56,7 +68,11 @@ public class PixelScroller {
         ipcon.disconnect();
     }
 
-    private static int[] getPixelCharacter(char c) {
+    /**
+     * Returns the pixel definition of the left and right character. The pixel
+     * definition of the left and right character is concatenated per row.
+     */
+    private static int[] getTwoCharacterPixels(char c) {
         int[] character = new int[8];
 
         if (c == 'J') {
@@ -196,5 +212,46 @@ public class PixelScroller {
             character[7] = 0;
         }
         return character;
+    }
+
+    /**
+     * Returns the character at the {@code charIndex} postion of the output
+     * text.
+     *
+     * @param charIndex character index in the output text
+     * @return the character at the given position
+     */
+    private static char getActualCharacter(int charIndex) {
+        return OUTPUT_TEXT.charAt(charIndex);
+    }
+
+    /**
+     * Split the two-character pixel array into the pixel definition of the left
+     * and right character.
+     *
+     * @param twoCharacterPixels the pixel array containing the definition of
+     * the left and right character
+     * @param charLeftPixels the array to store the pixel definition of the left
+     * character
+     * @param charRightPixels the array to store the pixel definition of the
+     * right character
+     */
+    private static void splitTwoCharacter(int[] twoCharacterPixels, short[] charLeftPixels, short[] charRightPixels) {
+        for (int i = 0; i < 7; i++) {
+            charLeftPixels[i] = (short) ((twoCharacterPixels[i] & 0x3E0) >> 5);
+            charRightPixels[i] = (short) (twoCharacterPixels[i] & 0x001F);
+        }
+    }
+
+    /**
+     * Move the pixels of the two-character to left by one position.
+     *
+     * @param twoCharacterPixels the pixel array containing the definition of
+     * the left and right character
+     */
+    private static void moveTwoCharacterPixels(int[] twoCharacterPixels) {
+        for (int pixelRow = 0; pixelRow < 7; pixelRow++) {
+            twoCharacterPixels[pixelRow] = twoCharacterPixels[pixelRow] << 1;
+        }
     }
 }
